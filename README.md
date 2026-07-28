@@ -38,7 +38,8 @@ Unlike payment fraud (which has mature detection), return fraud is behavioural â
 | `is_fraud` | TINYINT | Confirmed fraud label (ground truth) |
 
  ### How many total users do we have, and how many are confirmed fraudsters?
-'''SELECT
+'''sql
+SELECT
     COUNT(*)           AS total_rows,
     SUM(is_fraud)      AS fraud_users,
     COUNT(*) - SUM(is_fraud) AS honest_users,

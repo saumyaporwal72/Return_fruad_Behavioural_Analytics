@@ -43,7 +43,7 @@ SELECT
     SUM(is_fraud)      AS fraud_users,
     COUNT(*) - SUM(is_fraud) AS honest_users,
     ROUND(SUM(is_fraud)/COUNT(*)*100, 1) AS fraud_rate_pct
-FROM user_behaviour;
+FROM user_behaviour;###
 
 
 ###Business use: Operations team sees which cities need most fraud attention
@@ -55,7 +55,7 @@ count(*) - sum(is_fraud) as honest_users,
 round(sum(is_fraud)/count(*)*100,1) as return_rate_pct
 from user_behaviour
 group by city
-order by fraud_rate_pct desc;
+order by fraud_rate_pct desc;###
 
 ###every user whose return rate is higher than 60% -- these are high-risk accounts.
 select 

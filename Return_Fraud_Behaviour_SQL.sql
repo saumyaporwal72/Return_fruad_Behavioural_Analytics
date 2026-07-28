@@ -1,0 +1,462 @@
+create database if not exists Return_Fraud;
+show databases;
+use Return_Fraud;
+
+CREATE TABLE IF NOT EXISTS user_behaviour (
+    user_id                        VARCHAR(20)    PRIMARY KEY,
+    city                           VARCHAR(50),
+    account_age_days               INT,
+    orders_last_90d                INT,
+    return_rate_pct                DECIMAL(5,1),
+    damage_claim_pct               DECIMAL(5,1),
+    avg_days_to_return             INT,
+    unique_addresses_used          INT,
+    high_value_return_count        INT,
+    negative_reviews_after_return  INT,
+    support_tickets_filed          INT,
+    payment_method_changes         INT,
+    weekend_order_pct              DECIMAL(5,1),
+    category_concentration_score   DECIMAL(4,3),
+    top_return_category            VARCHAR(50),
+    is_fraud                       TINYINT
+);
+drop table user_behaviour;
+SHOW VARIABLES LIKE 'secure_file_priv';
+SET GLOBAL local_infile = 1;
+
+LOAD DATA INFILE 'Synthetic_fraud_Data.csv'
+INTO TABLE user_behaviour
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+DESCRIBE user_behaviour;
+ -- How many total users do we have, and how many are confirmed fraudsters?
+SELECT
+    COUNT(*)           AS total_rows,
+    SUM(is_fraud)      AS fraud_users,
+    COUNT(*) - SUM(is_fraud) AS honest_users,
+    ROUND(SUM(is_fraud)/COUNT(*)*100, 1) AS fraud_rate_pct
+FROM user_behaviour;
+
+-- City-Level Fraud Summary
+-- Business use: Operations team sees which cities need most fraud attention
+select 
+count(*) as total_users,
+city,
+sum(is_fraud) as fraud_users,
+count(*) - sum(is_fraud) as honest_users,
+round(sum(is_fraud)/count(*)*100,1) as return_rate_pct
+from user_behaviour
+group by city
+order by fraud_rate_pct desc;
+
+-- every user whose return rate is higher than 60% -- these are high-risk accounts.
+select 
+user_id,city,
+return_rate_pct,
+damage_claim_pct,
+account_age_days,
+is_fraud
+from user_behaviour
+where return_rate_pct > 60
+order by return_rate_pct desc
+Limit 20;
+
+-- Average Return Rate by City
+-- the average return rate in each city? Which city has the highest average return rate?
+select city,count(*),
+avg(return_rate_pct) as average_return_rate,
+sum(is_fraud),
+round(sum(is_fraud)/count(*)*100,2) as fraud_rate_pct
+from user_behaviour
+group by city
+order by average_return_rate desc;
+
+-- Classify every user into a risk tier: CRITICAL, HIGH, MEDIUM, or LOW based on their behaviour.
+select user_id,
+return_rate_pct,
+case when return_rate_pct >= 60 and damage_claim_pct >60 then 'critical'
+when return_rate_pct >=40 and damage_claim_pct >50 then 'High'
+when return_rate_pct >=20 or support_tickets_filed >5 then  'Medium'
+else 'Low'
+end as risk_tier,
+is_fraud
+from user_behaviour
+limit 100;
+
+-- Top 10 Cities by Fraud Count
+select city,
+count(*) as total_users,
+sum(is_fraud) as fraud_users,
+round(sum(is_fraud)/count(*)*100,2) as fraud_rate_pct
+from user_behaviour
+group by city
+order by fraud_users desc
+limit 10 ;
+
+-- How many unique cities are in our dataset? And how many unique return categories?
+select 
+count(distinct(city)) as unique_city,
+count(distinct(user_id)) as unique_user,
+count(distinct(top_return_category)) as unique_return_category
+from user_behaviour;
+
+select
+distinct(city)
+from user_behaviour
+order by city asc;
+
+-- Find users in Mumbai or Delhi who have return rate above 40% AND are confirmed fraud.
+select user_id,return_rate_pct,
+top_return_category
+from user_behaviour
+where(city = 'Mumbai' Or city = 'Delhi')
+and return_rate_pct > 40 
+and is_fraud = 1
+order by return_rate_pct desc;
+
+-- using IN 
+select user_id,
+return_rate_pct,
+top_return_category
+from user_behaviour
+where city in ('Mumbai', 'Delhi', 'Lucknow')
+and return_rate_pct >40 and 
+is_fraud = 1
+order by return_rate_pct desc;
+
+-- cities where the average return rate is greater than 10%. 
+select city, count(*) as total_users,
+avg(return_rate_pct ) as average_return_rate_pct,
+sum(is_fraud) as fraud_users
+from user_behaviour
+group by city
+having avg(return_rate_pct) > 10
+order by average_return_rate_pct desc;
+
+
+-- users in cities containing 'a' in the name, and create a display string.
+select user_id, upper(city),
+concat(user_id,'|',city) as user_city,
+concat('Fraud:', if(is_fraud = 1, 'Yes','No')) as fraud_status
+from user_behaviour
+where city like '%a%'
+limit 15; 
+
+-- users whose accounts were created within the last 6 months (account_age < 180 days).
+select user_id, city, account_age_days,is_fraud,
+case when account_age_days < 30 then 'New'
+when account_age_days < 60 then 'Growing'
+when account_age_days < 180 then 'Established'
+else 'Old'
+end as account_stage
+from user_behaviour
+where account_age_days <  180
+order by account_age_days desc;
+
+-- users who have return rates higher than the AVERAGE return rate of fraud users. 
+select user_id, return_rate_pct from user_behaviour
+where return_rate_pct > (select avg(return_rate_pct) from user_behaviour where is_fraud = 1)
+order by return_rate_pct desc;
+
+-- complete statistical summary of return rates for fraud vs honest users.
+select if(is_fraud = 1 ,'Fraud','Honest') as is_fraud,
+max(return_rate_pct) as maximum_return_rate_pct,
+min(return_rate_pct) as minimum_return_rate_pct,
+avg(return_rate_pct) as average_return_rate_pct,
+sum(return_rate_pct) as summation_ofreturn_rate_pct,
+round(stddev(return_rate_pct),2) as standard_deviation_of_return_rate_pct
+from user_behaviour
+group by is_fraud;
+
+-- city fraud summary
+select city,
+count(*) as total_users,
+sum(is_fraud) as fraud_users,
+count(*)-sum(is_fraud) as honest_users,
+avg(return_rate_pct) as avg_return_pct
+from user_behaviour
+group by city;
+
+-- What is the fraud rate for each city AND each return category combination?
+select city,top_return_category,
+sum(is_fraud) as fraud_users,
+count(*) as total_users,
+round(sum(is_fraud)/count(*)*100,2) as fraud_rate_pct
+from user_behaviour
+group by city , top_return_category
+order by fraud_rate_pct desc;
+
+-- users whose return rate is above the average return rate OF THEIR OWN CITY.
+with city_avg as(
+select city,
+avg(return_rate_pct) as average_return_rate_pct
+from user_behaviour
+group by city)
+select ub.user_id,
+ub.city,
+ub.return_rate_pct,
+ub.is_fraud,
+ca.average_return_rate_pct
+from user_behaviour as ub
+join city_avg as ca
+on ub.city=ca.city
+where ub.return_rate_pct > ca.average_return_rate_pct 
+order by ub.return_rate_pct;
+
+-- For each city, show the city's fraud count AND the overall total fraud count side by side.
+with city_stats as (
+select city , sum(is_fraud) as fraud_count
+from user_behaviour
+group by city 
+),
+overall as  (
+select sum(is_fraud) as total_fraud
+from user_behaviour
+)
+Select cs.city, cs.fraud_count,o.total_fraud
+from city_stats  cs cross join overall o;
+    
+-- cities having more than the average number of fraud users.
+   with fraud_count as(
+select city, count(*) as fraud_users
+from user_behaviour
+where is_fraud = 1
+group by city),
+avg_fraud as (
+select avg(fraud_users) as avg_count
+from fraud_count
+)
+select fc.city,fc.fraud_users, af.avg_count
+from fraud_count fc
+cross join avg_fraud af
+where fc.fraud_users > af.avg_count; 
+
+-- Find cities where the fraud rate is above the overall average fraud rate.
+with fraud_rate as(
+select city , sum(is_fraud)/count(*)*100 as fraud_return_rate
+from user_behaviour
+group by city),
+average_rate as(
+select round(sum(is_fraud)/count(*)*100,2)as average_fraud_rate
+from user_behaviour)
+select fr.city,fr.fraud_return_rate, ar.average_fraud_rate from fraud_rate as fr
+cross join average_rate as ar
+where fr.fraud_return_rate > ar.average_fraud_rate;
+
+-- Compare fraud detection performance of 4 different rule-based approaches in one output
+select 'Rule 1: Return>50%' as rule_name,count(*) as users_flagged,
+sum(is_fraud) as fraud_caught,round(sum(is_fraud)/count(*)*100,1) as precision_pct
+from user_behaviour 
+where return_rate_pct > 50
+union all
+select 'Rule 2: Damage>60%', count(*),
+sum(is_fraud) ,round(sum(is_fraud)/count(*)*100,1) 
+from user_behaviour where damage_claim_pct > 60
+union all
+select 'Rule 3: Return>40% AND Damage>40%',
+count(*),sum(is_fraud) ,round(sum(is_fraud)/count(*)*100,1)    
+from user_behaviour where return_rate_pct>40 and damage_claim_pct>40
+union all
+select 'Rule 4: Three signals',count(*),sum(is_fraud) ,round(sum(is_fraud)/count(*)*100,1) 
+from user_behaviour
+where return_rate_pct>40 and damage_claim_pct>40 and account_age_days<365 
+order by  precision_pct desc;
+
+-- Find pairs of users who share the same delivery address count AND have high return rates.
+select a.user_id, b.user_id,a.city,a.unique_addresses_used, a.return_rate_pct,b.return_rate_pct
+from user_behaviour as a
+inner join user_behaviour as b
+on a.city = b.city and a.unique_addresses_used = b.unique_addresses_used and a.user_id<b.user_id
+where a.return_rate_pct >40 and b.return_rate_pct >40 and a.unique_addresses_used >4
+order by a.return_rate_pct desc
+limit 20;
+
+-- For each city, show a comma-separated list of unique return categories used by fraud users
+SELECT city, count(*) as fraud_users,
+GROUP_CONCAT(distinct top_return_category
+order by  top_return_category asc SEPARATOR ' | ') as categories_used,
+GROUP_CONCAT(distinct top_return_category order by top_return_category asc SEPARATOR ',') as categories_csv
+from user_behaviour
+where is_fraud = 1
+group by city
+order by fraud_users DESC;
+
+-- a summary report with city totals AND a grand total row at the bottom.
+select coalesce(city , 'grand city total') as city ,
+count(*) as total_users, sum(is_fraud) as fraud_users,
+ROUND(SUM(is_fraud)/COUNT(*)*100, 1)  as fraud_rate_pct,
+ROUND(AVG(return_rate_pct), 1) as avg_return_rate
+from user_behaviour
+group by  city with rollup;
+
+-- users in specific return rate brackets for the fraud operations team's daily report.
+select case when return_rate_pct between 0 and 19 then '0-19% (Normal)'
+when return_rate_pct between 0 and 19 then '20-40% watch)'
+when return_rate_pct between 41 and 59 then '41-59% (Review)'
+when return_rate_pct between 60 and 79 then '60-79% (Suspicious)'
+when return_rate_pct between 80 and 100 then '80-100%(Block)'
+end  as return_rate_bucket,
+count(*) as total_users,							
+sum(is_fraud) as fraud_users,
+round(sum(is_fraud)/count(*)*100,2) as fraud_rate_pct,
+avg(damage_claim_pct)as avg_damage_claim
+from user_behaviour
+group by return_rate_bucket
+order by MIN(return_rate_pct); 
+
+-- Rank users by return rate within each city. Show which user has the highest return rate per city
+select user_id, city, return_rate_pct , rank() over(partition by city order by return_rate_pct desc) as rank_of_city,
+dense_rank() over(partition by city order by return_rate_pct desc) as denserank_of_city
+from user_behaviour
+order by city,rank_of_city;
+
+-- Divide users into quartiles based on return rate. Show fraud rate in each quartile.
+with user_quartiles as (
+select user_id, return_rate_pct, is_fruad,
+ntile(4) over(order by return_rate_pct) as quartile
+from user_behaviour)
+select 
+quartile, count(*) as total_users, sum(is_fraud) as fraud_users, round(sum(is_fraud)*100/count(*),2) as fraud_rate_pct 
+from user_quartiles 
+group by quartile order by quartile;
+
+-- Compare each city's fraud rate to the previous city (when sorted by fraud rate). Show trend.
+with fraud_rate as(
+select city, sum(is_fraud) as fraud_users,
+round(sum(is_fraud)/count(*)*100,2) as fraud_rate_pct
+from user_behaviour
+group by city)
+select city,fraud_rate_pct,
+lag(fraud_rate_pct,1) over(order by fraud_rate_pct) as previous_fraud_rate,
+lead(fraud_rate_pct,1) over(order by fraud_rate_pct)as next_fraud_rate,
+fraud_rate_pct - lag(fraud_rate_pct,1) over(order by fraud_rate_pct) as diff_rate,
+case when lag(fraud_rate_pct) over(order by fraud_rate_pct) is null then 'First City'
+when fraud_rate_pct > lag(fraud_rate_pct) over(order by fraud_rate_pct) then 'Increase'
+when fraud_rate_pct < lag(fraud_rate_pct)  over(order by fraud_rate_pct) then 'Decrease'
+else 'No Change'end as Trend
+from fraud_rate;
+
+-- Calculate a running total of fraud users as you go through cities sorted by fraud count.
+with city_fraud as(
+select city, sum(is_fraud) as fraud_count,
+Round(sum(is_fraud)/COUNT(*)*100, 1) as fraud_rate_pct
+from user_behaviour
+group by city
+)
+select city,fraud_count,fraud_rate_pct,sum(fraud_count) over(order by fraud_count desc) as running_total_fraud,
+sum(fraud_count) over() as grand_total,
+round(sum(fraud_count) over(order by fraud_count desc)/sum(fraud_count) over()*100,1) as cumulative_total
+from city_fraud;
+
+-- Use a CTE to calculate the average return rate per city, then find users above their city average.
+with city_averages as (
+select city, round(avg(return_rate_pct),2) as city_avg_return_rate,count(*) as city_user_count
+from  user_behaviour
+group by city
+)
+select ub.user_id,ub.city,ub.return_rate_pct,ca.city_avg_return_rate,
+ROUND(ub.return_rate_pct - ca.city_avg_return_rate, 1) as above_city_avg_by,
+ub.is_fraud
+from user_behaviour as ub
+inner join city_averages as ca
+on ub.city = ca.city
+where ub.return_rate_pct > ca.city_avg_return_rate
+order by above_city_avg_by desc
+limit 30;
+
+-- :  If a user appears multiple times (from multiple data loads), keep only the most recent record.
+with ranked_users as (
+select *, row_number() over( partition by user_id order by account_age_days desc) as rn
+from user_behaviour)
+select user_id, city, return_rate_pct, damage_claim_pct,
+account_age_days, is_fraud
+from  ranked_users
+where rn = 1 
+order by user_id;
+
+-- build a fraud analytics pipeline: city stats, risk tiers, and final summary.
+with city_stats as(
+select city, count(*) as total_users, sum(is_fraud) as fraud_count,
+round(sum(is_fraud)/count(*)*100,1) as fraud_rate_pct,
+round(avg(return_rate_pct),1) as avg_return_rate
+from user_behvaiour
+group by city
+),
+city_risk as (
+select *,
+case when fraud_rate_pct >=7 then 'High Risk City'
+when fraud_rate_pct >= 5  then 'MODERATE RISK'
+else 'NORMAL'
+end  as city_risk_tier
+from city_stats
+),
+city_ranked as (
+select *,
+rank() over (order by fraud_rate_pct desc)  as fraud_rank,
+rank() over (order by avg_return_rate desc) as return_ran
+from city_risk
+)
+SELECT * FROM city_ranked;
+
+
+-- Pivot the data to show fraud count by city across different risk tiers in column format.
+select city,
+SUM(case when return_rate_pct >= 60 and damage_claim_pct >= 60
+and is_fraud=1 then 1 else 0 end) as critical_fraud,
+SUM(case when (return_rate_pct between 40 and 59
+or damage_claim_pct between 50 and 59)
+and is_fraud=1 then 1 else 0 end)    as high_fraud,
+SUM(case when return_rate_pct between  20 and 39
+and is_fraud=1 then 1 else 0 end)    as medium_fraud,
+SUM(case when return_rate_pct < 20
+and is_fraud=1 then 1 else 0 end)    as low_fraud,
+SUM(is_fraud) as total_fraud,
+COUNT(*) as total_users,
+ROUND(SUM(is_fraud)/COUNT(*)*100, 1) as overall_fraud_rate
+from user_behaviour
+group by city
+order by  total_fraud desc;
+
+-- Query Optimizations
+create index idx_city on  user_behaviour(city);
+create index idx_is_fraud on user_behaviour(is_fraud);
+create index idx_return_rate on user_behaviour(return_rate_pct);
+create index idx_city_fraud on user_behaviour(city, is_fraud);
+
+-- CHECK how query uses indexes
+Explain select user_id, return_rate_pct, is_fraud
+from  user_behaviour
+where city = 'Mumbai'
+and is_fraud = 1
+and return_rate_pct > 50
+order by return_rate_pct desc;
+
+select user_id, return_rate_pct, is_fraud
+from user_behaviour
+where city = 'Mumbai'   
+and is_fraud = 1
+and return_rate_pct > 50
+order by return_rate_pct desc;
+
+-- Calculate a 3-record moving average of fraud rates across cities sorted by city name.
+with city_fraud_rates AS (
+select city,ROUND(SUM(is_fraud)/COUNT(*)*100, 2) AS fraud_rate_pct
+from user_behaviour
+group by city
+order by city
+),
+city_with_row as (
+select *,row_number() over (order by city) as rn
+from city_fraud_rates
+)
+select city,fraud_rate_pct,
+ROUND(AVG(fraud_rate_pct) over (order by rn rows between 1 preceding and 1 following), 2)  as moving_avg_3,
+ROUND(AVG(fraud_rate_pct) over (order by rn rows between unbounded preceding and current row), 2) as cumulative_avg,
+SUM(fraud_rate_pct) over (order by rn rows between 1 preceding and 1 following) as moving_sum_3
+from city_with_row
+order by rn;
+
+

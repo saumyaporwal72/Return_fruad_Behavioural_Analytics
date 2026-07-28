@@ -37,13 +37,13 @@ Unlike payment fraud (which has mature detection), return fraud is behavioural â
 | `top_return_category` | VARCHAR(50) | Most-returned product category |
 | `is_fraud` | TINYINT | Confirmed fraud label (ground truth) |
 
- ###How many total users do we have, and how many are confirmed fraudsters?
+ ###How many total users do we have, and how many are confirmed fraudsters?###
 SELECT
     COUNT(*)           AS total_rows,
     SUM(is_fraud)      AS fraud_users,
     COUNT(*) - SUM(is_fraud) AS honest_users,
     ROUND(SUM(is_fraud)/COUNT(*)*100, 1) AS fraud_rate_pct
-FROM user_behaviour;###
+FROM user_behaviour;
 
 
 ###Business use: Operations team sees which cities need most fraud attention

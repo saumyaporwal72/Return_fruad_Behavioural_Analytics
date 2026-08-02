@@ -12,14 +12,21 @@ Indian e-commerce platforms lose an estimated ₹12,000–15,000 Crore annually 
 
 Unlike payment fraud (which has mature detection), return fraud is behavioural — it looks identical to legitimate returns from the outside. The only signal is the pattern of behaviour over time: how often a user returns, how quickly, what reason they claim, how new their account is.
 
+# Business Problem
+
+A fraud analyst at many companies faces 500,000 active return-behaviour users with no principled way to prioritise review. Sorting by return count catches only the most obvious fraudsters. Simple rules (return rate > 50%) have 72% precision — blocking nearly 1 in 3 innocent customers.
+
 ##🗃 Dataset
 Why Synthetic Data?
 
 Real fraud data from Indian e-commerce companies is confidential and unavailable publicly. Synthetic data built on domain-specific distributions replicates the statistical properties of real fraud patterns.
 
-##Exploratory Data Analysis
+## Exploratory Data Analysis
 
 *Univariate Analysis*
+
+<img width="1005" height="347" alt="image" src="https://github.com/user-attachments/assets/8f78b502-eddc-44b1-94f4-3a586a95be2a" />
+
 
 ## Dataset & schema
 

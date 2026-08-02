@@ -23,9 +23,13 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 
 ## Exploratory Data Analysis
 
-*Univariate Analysis*
+####Univariate Analysis*
 
 <img width="1005" height="347" alt="image" src="https://github.com/user-attachments/assets/8f78b502-eddc-44b1-94f4-3a586a95be2a" />
+
+> ### 💡 Business Insight
+> Fraudulent users exhibit an average return rate nearly 3.7× higher than legitimate users (66.6% vs. 18.2%). While return rate is a strong predictor of fraud, the overlap between 28%–45% suggests that combining return rate with additional behavioral features will reduce false positives and improve fraud detection accuracy. The percentile analysis further shows that 75% of customers return less than 26.6% of purchases, providing a data-driven baseline for defining risk thresholds and optimizing manual review efforts.
+
 
 
 ## Dataset & schema

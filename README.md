@@ -16,7 +16,7 @@ Unlike payment fraud (which has mature detection), return fraud is behavioural �
 
 A fraud analyst at many companies faces 500,000 active return-behaviour users with no principled way to prioritise review. Sorting by return count catches only the most obvious fraudsters. Simple rules (return rate > 50%) have 72% precision — blocking nearly 1 in 3 innocent customers.
 
-##🗃 Dataset
+## 🗃  Dataset
 Why Synthetic Data?
 
 Real fraud data from Indian e-commerce companies is confidential and unavailable publicly. Synthetic data built on domain-specific distributions replicates the statistical properties of real fraud patterns.
@@ -65,8 +65,7 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 
 > ### 💡 Business Insight
 > Outlier analysis revealed that statistical anomalies are highly associated with fraudulent behavior. While only 5–6% of customers were classified as outliers based on Return Rate and Damage Claim Percentage, these groups contained fraud rates of 84.8% and 74.8%, respectively—far exceeding the overall fraud prevalence. In contrast, Account Age produced no statistical outliers, indicating that fraudsters typically operate within the lower end of the normal account age distribution rather than as extreme values. These findings demonstrate that outlier detection is an effective early-warning mechanism for prioritizing fraud investigations while reducing manual review effort.
-
-The violin plots reveal that fraudsters behave consistently rather than randomly—operating through newer accounts while exhibiting significantly higher return rates and damage claims. The clear separation between fraud and legitimate customer distributions validates these engineered features as high-value predictors for building accurate, behavior-based fraud detection models.
+>The violin plots reveal that fraudsters behave consistently rather than randomly—operating through newer accounts while exhibiting significantly higher return rates and damage claims. The clear separation between fraud and legitimate customer distributions validates these engineered features as high-value predictors for building accurate, behavior-based fraud detection models.
 
 ## Dataset & schema
 

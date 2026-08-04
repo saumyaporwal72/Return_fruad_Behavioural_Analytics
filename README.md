@@ -86,6 +86,12 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 > The correlation analysis demonstrates that fraudulent behavior is driven by consistent customer actions rather than isolated transactions. The strongest predictors of fraud include frequent payment method changes (0.78), support ticket activity (0.75), high-value return count (0.71), damage claim percentage (0.70), unique shipping addresses (0.70), and return rate (0.68). In contrast, older account age, longer purchase history, and slower return behavior are negatively associated with fraud, reflecting genuine customer engagement. These findings validate the use of behavioral analytics as the foundation of a fraud risk scoring framework, enabling organizations to identify high-risk customers earlier, prioritize investigations, reduce revenue leakage, and minimize false positives through data-driven decision making.
 > One of the key outcomes of the correlation analysis was that fraud was overwhelmingly explained by behavioral signals rather than static customer attributes. Instead of relying on a single indicator, I identified a combination of high-impact behavioral features—payment method changes, support interactions, return behavior, and shipping address diversity—that can be combined into a robust fraud risk scoring model. This approach enables earlier detection, better model performance, and more efficient allocation of fraud investigation resources.
 
+3- Grouped Box Plot -- Numeric Variable Split by Category
+
+<img width="1113" height="459" alt="image" src="https://github.com/user-attachments/assets/feef0370-8992-4ec5-8afb-13cac8d10b56" />
+
+> ### 💡 Business Insight
+> One important finding from the grouped box plots was that fraud behavior remained remarkably consistent across both cities and product categories.The minimal overlap between the two groups confirms that excessive return behavior is a universal fraud characteristic rather than a location- or category-specific phenomenon Instead of creating separate fraud rules for each region, the business can rely on behavioral features like Return Rate %, which consistently separates fraudulent and genuine customers. This simplifies fraud operations, improves model generalization, and enables a scalable, behavior-driven fraud detection strategy.
 
 ## Dataset & schema
 

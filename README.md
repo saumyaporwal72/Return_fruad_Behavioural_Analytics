@@ -101,7 +101,17 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 > ### 💡 Business Insight
 > One of the most important findings from the cross-tabulation analysis was that geography and product category had relatively little impact once behavioral risk was considered. Customers classified as Critical Risk showed nearly 100% fraud rates regardless of city or category, demonstrating that behavioral risk scoring is far more effective than static business rules. This supports a scalable, enterprise-wide fraud strategy where low-risk customers are processed automatically while investigative resources are focused on the small subset of high-risk users.
 
-5- 
+5- Account Age vs Fraud Probability -- Log Scale Scatter
+
+<img width="1101" height="432" alt="image" src="https://github.com/user-attachments/assets/0f5bc1ba-8d2e-417b-a6c0-1d9fb5354c3b" />
+
+> ### 💡 Business Insight
+> One of the most actionable findings from the bivariate density analysis was that fraudsters are highly concentrated within the first 200 days of account creation while simultaneously exhibiting return rates above 40%. Rather than treating all customers equally, this insight enables a lifecycle-aware fraud strategy where new accounts receive enhanced monitoring and long-standing customers benefit from streamlined return processing. This improves fraud detection accuracy while maintaining a better customer experience for genuine users.
+> The analysis demonstrates that fraud is both behavioral and lifecycle-driven. By combining account age with return behavior, the business can identify a small, high-risk customer segment early in the customer journey, enabling proactive fraud prevention, reducing manual investigation costs, and preserving a frictionless experience for trusted customers.
+
+
+### Multivariate Analysis
+
 
 ## Dataset & schema
 

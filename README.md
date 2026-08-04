@@ -71,6 +71,7 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 ## Bivariate Analysis
 
 1- The Fraud Quadrant Scatter Plot
+
 <img width="939" height="421" alt="image" src="https://github.com/user-attachments/assets/bff79d1d-803e-4bb1-9f31-deb2cc4fe4c4" />
 
 > ### 💡 Business Insight

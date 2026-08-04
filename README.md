@@ -93,6 +93,16 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 > ### 💡 Business Insight
 > One important finding from the grouped box plots was that fraud behavior remained remarkably consistent across both cities and product categories.The minimal overlap between the two groups confirms that excessive return behavior is a universal fraud characteristic rather than a location- or category-specific phenomenon Instead of creating separate fraud rules for each region, the business can rely on behavioral features like Return Rate %, which consistently separates fraudulent and genuine customers. This simplifies fraud operations, improves model generalization, and enables a scalable, behavior-driven fraud detection strategy.
 
+
+4- Cross-Tabulation -- Category vs Category
+
+<img width="1087" height="445" alt="image" src="https://github.com/user-attachments/assets/12af9fd3-d66c-4b16-a26a-2bbcf4e1f786" />
+
+> ### 💡 Business Insight
+> One of the most important findings from the cross-tabulation analysis was that geography and product category had relatively little impact once behavioral risk was considered. Customers classified as Critical Risk showed nearly 100% fraud rates regardless of city or category, demonstrating that behavioral risk scoring is far more effective than static business rules. This supports a scalable, enterprise-wide fraud strategy where low-risk customers are processed automatically while investigative resources are focused on the small subset of high-risk users.
+
+5- 
+
 ## Dataset & schema
 
 - Source: `Synthetic_fraud_Data.csv`, loaded via `LOAD DATA INFILE` into a MySQL table `user_behaviour`

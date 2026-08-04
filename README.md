@@ -67,6 +67,25 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 > Outlier analysis revealed that statistical anomalies are highly associated with fraudulent behavior. While only 5–6% of customers were classified as outliers based on Return Rate and Damage Claim Percentage, these groups contained fraud rates of 84.8% and 74.8%, respectively—far exceeding the overall fraud prevalence. In contrast, Account Age produced no statistical outliers, indicating that fraudsters typically operate within the lower end of the normal account age distribution rather than as extreme values. These findings demonstrate that outlier detection is an effective early-warning mechanism for prioritizing fraud investigations while reducing manual review effort.
 >The violin plots reveal that fraudsters behave consistently rather than randomly—operating through newer accounts while exhibiting significantly higher return rates and damage claims. The clear separation between fraud and legitimate customer distributions validates these engineered features as high-value predictors for building accurate, behavior-based fraud detection models.
 
+
+## Bivariate Analysis
+
+1- The Fraud Quadrant Scatter Plot
+<img width="939" height="421" alt="image" src="https://github.com/user-attachments/assets/bff79d1d-803e-4bb1-9f31-deb2cc4fe4c4" />
+
+> ### 💡 Business Insight
+> Instead of relying on individual thresholds, I combined Return Rate and Damage Claim Percentage to create a Fraud Quadrant.The Fraud Quadrant analysis demonstrates that fraudulent customers consistently combine high return rates with frequent damage claims, forming a distinct high-risk behavioral cluster. While only ~4.5% of customers fall into this quadrant, they account for a fraud rate of 98.5%, making it the highest-value segment for investigation. Conversely, nearly 89% of customers belong to the low-risk quadrant with virtually no fraud, enabling businesses to automate return approvals for genuine customers while concentrating fraud prevention efforts on a small, high-impact population. This behavior-driven segmentation improves fraud detection accuracy, reduces manual review costs, minimizes revenue leakage, and enhances customer experience.
+
+2- Correlation Heatmap -- All Variables at Once
+
+<img width="1105" height="467" alt="image" src="https://github.com/user-attachments/assets/fd393e10-2abd-4b7b-8e06-8c07cf10e7b0" />
+<img width="484" height="250" alt="image" src="https://github.com/user-attachments/assets/33c3fc36-cb5d-49bd-a257-bc2627ffb467" />
+
+> ### 💡 Business Insight
+> The correlation analysis demonstrates that fraudulent behavior is driven by consistent customer actions rather than isolated transactions. The strongest predictors of fraud include frequent payment method changes (0.78), support ticket activity (0.75), high-value return count (0.71), damage claim percentage (0.70), unique shipping addresses (0.70), and return rate (0.68). In contrast, older account age, longer purchase history, and slower return behavior are negatively associated with fraud, reflecting genuine customer engagement. These findings validate the use of behavioral analytics as the foundation of a fraud risk scoring framework, enabling organizations to identify high-risk customers earlier, prioritize investigations, reduce revenue leakage, and minimize false positives through data-driven decision making.
+> One of the key outcomes of the correlation analysis was that fraud was overwhelmingly explained by behavioral signals rather than static customer attributes. Instead of relying on a single indicator, I identified a combination of high-impact behavioral features—payment method changes, support interactions, return behavior, and shipping address diversity—that can be combined into a robust fraud risk scoring model. This approach enables earlier detection, better model performance, and more efficient allocation of fraud investigation resources.
+
+
 ## Dataset & schema
 
 - Source: `Synthetic_fraud_Data.csv`, loaded via `LOAD DATA INFILE` into a MySQL table `user_behaviour`

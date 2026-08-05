@@ -112,6 +112,47 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 
 ### Multivariate Analysis
 
+## Pair Plot -- Every Feature Combination at Once
+
+<img width="362" height="348" alt="image" src="https://github.com/user-attachments/assets/193b1780-afe3-4e1f-a20e-b3b0eedcc99f" />
+
+> ### 💡 Business Insight
+>
+> 1. Fraudulent Customers Form Distinct Behavioral Clusters
+>
+>Across multiple feature combinations, fraudulent customers (red) occupy distinct regions of the feature space, while honest customers (blue) are concentrated in lower-risk behavioral ranges. This indicates that fraudsters follow consistent behavioral patterns rather than exhibiting random activity.
+>
+> 2. High Return Rate and Damage Claim Percentage Frequently Occur Together
+>
+> The pairwise relationships suggest that customers with high return rates often also report high damage claim percentages. This reinforces that these two variables jointly represent one of the strongest behavioral signatures of fraudulent activity.
+>
+> 3. Strong Positive Relationships Exist Among Fraud-Related Behaviors
+>
+> Features such as return rate, damage claim percentage, payment method changes, support tickets, and high-value return count tend to increase together for fraudulent customers. This demonstrates that fraudsters typically exhibit multiple suspicious behaviors simultaneously.
+>
+> 4. Account Age Shows an Inverse Relationship with Fraud
+>
+> Pairwise comparisons indicate that customers with shorter account histories are more likely to exhibit excessive return activity and other suspicious behaviors, whereas older accounts display stable purchasing patterns.
+>
+> 5. Legitimate Customers Exhibit Stable Purchasing Behavior
+>
+> Honest customers are densely clustered around lower values for return rate, damage claims, and other behavioral metrics, indicating consistent and predictable shopping behavior with relatively low variability.
+>
+> 6. Fraud is Multi-Dimensional
+>
+> No single feature completely separates fraudulent customers. Instead, fraud becomes clearly identifiable when multiple behavioral variables are analyzed together. This confirms the importance of multivariate analysis in fraud detection.
+>
+> 7. Supports Feature Selection for Machine Learning
+>
+> The pair plot highlights several features with strong discriminatory power while also revealing correlations between predictors. This provides valuable guidance for feature engineering and selecting high-impact variables for predictive fraud models.
+>
+> 8. Limited Overlap Improves Model Performance
+>
+> Several feature combinations show minimal overlap between fraudulent and genuine customers, suggesting that machine learning algorithms can achieve strong classification performance using these behavioral indicators.
+>
+> 9. Behavioral Features Are More Valuable Than Static Attributes
+>
+> Dynamic customer actions—such as return behavior, payment activity, and support interactions—show much stronger separation than static characteristics, reinforcing that fraud detection should focus on behavioral analytics.
 
 ## Dataset & schema
 

@@ -161,10 +161,10 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 
 ### Statistical Testing
 
-# TEST 1: T-TEST -- Is fraud return rate significantly higher than honest?
-# T-test: compares MEANS of two groups for continuous variables
-# H0 (null hypothesis): fraud and honest have same return rate on average
-# H1 (alternative): they have different return rates
+### TEST 1: T-TEST -- Is fraud return rate significantly higher than honest?
+### T-test: compares MEANS of two groups for continuous variables
+### H0 (null hypothesis): fraud and honest have same return rate on average
+### H1 (alternative): they have different return rates
   Fraud mean:  66.56%
   Honest mean: 18.19%
   T-statistic: 573.37
@@ -172,9 +172,9 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
   Result:      SIGNIFICANT (p<0.001)
   Meaning:     The difference is NOT due to random chance.
 
-# TEST 2: CHI-SQUARE -- Is multi-address behaviour associated with fraud?
-# Chi-square: tests association between TWO CATEGORICAL variables
-# Both variables must be categories (yes/no, groups, etc.)
+### TEST 2: CHI-SQUARE -- Is multi-address behaviour associated with fraud?
+### Chi-square: tests association between TWO CATEGORICAL variables
+### Both variables must be categories (yes/no, groups, etc.)
 TEST 2: Chi-Square -- Multi-Address vs Fraud
   Contingency table:
 is_fraud               0      1
@@ -187,10 +187,10 @@ is_multi_address
   Result: SIGNIFICANT
   Users with 3+ addresses are 68.9x more likely to be fraud
 
-# TEST 3: MANN-WHITNEY U -- Account age difference (non-parametric)
-# Mann-Whitney does NOT assume normal distribution
-# Better than t-test when distribution is skewed (like account age)
-#TEST 3: Mann-Whitney U -- Account Age (Fraud vs Honest)
+### TEST 3: MANN-WHITNEY U -- Account age difference (non-parametric)
+### Mann-Whitney does NOT assume normal distribution
+### Better than t-test when distribution is skewed (like account age)
+### TEST 3: Mann-Whitney U -- Account Age (Fraud vs Honest)
   Fraud median:  103 days
   Honest median: 928 days
   U-statistic: 342834690

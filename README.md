@@ -203,10 +203,10 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
   > 
   > Users with 3+ addresses are 68.9x more likely to be fraud
   
-# TEST 3: MANN-WHITNEY U -- Account age difference (non-parametric)
-# Mann-Whitney does NOT assume normal distribution
-# Better than t-test when distribution is skewed (like account age)
-# TEST 3: Mann-Whitney U -- Account Age (Fraud vs Honest)
+### TEST 3: MANN-WHITNEY U -- Account age difference (non-parametric)
+### Mann-Whitney does NOT assume normal distribution
+### Better than t-test when distribution is skewed (like account age)
+### TEST 3: Mann-Whitney U -- Account Age (Fraud vs Honest)
   >
   > Fraud median:  103 days
   >

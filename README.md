@@ -159,6 +159,49 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 >
 > Dynamic customer actions—such as return behavior, payment activity, and support interactions—show much stronger separation than static characteristics, reinforcing that fraud detection should focus on behavioral analytics.
 
+### Statistical Testing
+
+# TEST 1: T-TEST -- Is fraud return rate significantly higher than honest?
+# T-test: compares MEANS of two groups for continuous variables
+# H0 (null hypothesis): fraud and honest have same return rate on average
+# H1 (alternative): they have different return rates
+  Fraud mean:  66.56%
+  Honest mean: 18.19%
+  T-statistic: 573.37
+  P-value:     0.00e+00
+  Result:      SIGNIFICANT (p<0.001)
+  Meaning:     The difference is NOT due to random chance.
+
+# TEST 2: CHI-SQUARE -- Is multi-address behaviour associated with fraud?
+# Chi-square: tests association between TWO CATEGORICAL variables
+# Both variables must be categories (yes/no, groups, etc.)
+TEST 2: Chi-Square -- Multi-Address vs Fraud
+  Contingency table:
+is_fraud               0      1
+is_multi_address               
+0                 437031   3580
+1                  37969  21420
+  Chi-square stat: 136933.64
+  P-value:         0.00e+00
+  Degrees of freedom: 1
+  Result: SIGNIFICANT
+  Users with 3+ addresses are 68.9x more likely to be fraud
+
+# TEST 3: MANN-WHITNEY U -- Account age difference (non-parametric)
+# Mann-Whitney does NOT assume normal distribution
+# Better than t-test when distribution is skewed (like account age)
+#TEST 3: Mann-Whitney U -- Account Age (Fraud vs Honest)
+  Fraud median:  103 days
+  Honest median: 928 days
+  U-statistic: 342834690
+  P-value:     0.00e+00
+  Result:      SIGNIFICANT
+  Meaning:     Fraud accounts are significantly YOUNGER than honest accounts
+
+SUMMARY:
+All 3 tests confirm: fraud signals are statistically significant (p < 0.001)
+These are NOT due to random chance in our synthetic dataset.
+
 ## Dataset & schema
 
 - Source: `Synthetic_fraud_Data.csv`, loaded via `LOAD DATA INFILE` into a MySQL table `user_behaviour`

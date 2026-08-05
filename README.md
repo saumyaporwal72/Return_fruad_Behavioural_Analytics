@@ -114,7 +114,12 @@ Real fraud data from Indian e-commerce companies is confidential and unavailable
 
 ## Pair Plot -- Every Feature Combination at Once
 
-<img width="362" height="348" alt="image" src="https://github.com/user-attachments/assets/193b1780-afe3-4e1f-a20e-b3b0eedcc99f" />
+<img width="956" height="398" alt="image" src="https://github.com/user-attachments/assets/77fe6520-19bb-4301-9bc9-217233a529a7" />
+
+<img width="1102" height="395" alt="image" src="https://github.com/user-attachments/assets/3005fadc-d9c2-470f-b32b-2b3e487e63c8" />
+
+<img width="1016" height="237" alt="image" src="https://github.com/user-attachments/assets/7fa67a6f-4e97-45de-9937-569096957560" />
+
 
 > ### 💡 Business Insight
 >
